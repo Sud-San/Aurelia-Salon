@@ -18,15 +18,32 @@ if (missing.length) {
 }
 
 const port = Number(process.env.PORT) || 5000;
-const origin = process.env.CLIENT_URL || 'http://localhost:5173';
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((s) => s.trim());
+
+const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  if (origin.endsWith('.vercel.app')) return true;
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
+  return true;
+};
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin, credentials: true } });
+const io = new Server(server, {
+  cors: {
+    origin: (origin, callback) => {
+      callback(null, true);
+    },
+    credentials: true,
+  },
+});
 initSocket(io);
 
 connectDB().then(() => {
   server.listen(port, () => {
     console.log(`API running at http://localhost:${port}`);
-    console.log(`Socket.IO ready. Client origin: ${origin}`);
+    console.log(`Socket.IO ready. Allowed origins: ${allowedOrigins.join(', ')}`);
   });
 });
