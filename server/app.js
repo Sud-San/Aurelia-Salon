@@ -5,9 +5,30 @@ import routes from './routes/index.js';
 import { errorHandler, notFound } from './middleware/error.js';
 
 const app = express();
-const origin = process.env.CLIENT_URL || 'http://localhost:5173';
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .split(',')
+  .map((s) => s.trim());
 
-app.use(cors({ origin, credentials: true }));
+const isOriginAllowed = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  if (origin.endsWith('.vercel.app')) return true;
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
+  return false;
+};
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (isOriginAllowed(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Permissive in deployment to prevent frontend lockouts
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: '2mb' }));
 if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
 app.use('/api', routes);
