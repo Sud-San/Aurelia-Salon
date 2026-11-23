@@ -20,13 +20,14 @@ if (missing.length) {
 const port = Number(process.env.PORT) || 5000;
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .split(',')
-  .map((s) => s.trim());
+  .map((s) => s.trim().replace(/\/+$/, ''));
 
 const isOriginAllowed = (origin) => {
   if (!origin) return true;
-  if (allowedOrigins.includes(origin)) return true;
-  if (origin.endsWith('.vercel.app')) return true;
-  if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
+  const cleanOrigin = origin.trim().replace(/\/+$/, '');
+  if (allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes('*')) return true;
+  if (cleanOrigin.endsWith('.vercel.app')) return true;
+  if (cleanOrigin.includes('localhost') || cleanOrigin.includes('127.0.0.1')) return true;
   return true;
 };
 
@@ -34,7 +35,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
-      callback(null, true);
+      callback(null, origin || true);
     },
     credentials: true,
   },
