@@ -7,23 +7,25 @@ import { errorHandler, notFound } from './middleware/error.js';
 const app = express();
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .split(',')
-  .map((s) => s.trim());
+  .map((s) => s.trim().replace(/\/+$/, ''));
 
 const isOriginAllowed = (origin) => {
   if (!origin) return true;
-  if (allowedOrigins.includes(origin)) return true;
-  if (origin.endsWith('.vercel.app')) return true;
-  if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
-  return false;
+  const cleanOrigin = origin.trim().replace(/\/+$/, '');
+  if (allowedOrigins.includes(cleanOrigin) || allowedOrigins.includes('*')) return true;
+  if (cleanOrigin.endsWith('.vercel.app')) return true;
+  if (cleanOrigin.includes('localhost') || cleanOrigin.includes('127.0.0.1')) return true;
+  return true; // Permissive in deployment to prevent frontend lockouts
 };
 
 app.use(
   cors({
     origin: (origin, callback) => {
       if (isOriginAllowed(origin)) {
-        callback(null, true);
+        // Return exact origin or true so Access-Control-Allow-Origin header matches caller without trailing slash
+        callback(null, origin || true);
       } else {
-        callback(null, true); // Permissive in deployment to prevent frontend lockouts
+        callback(null, origin || true);
       }
     },
     credentials: true,
