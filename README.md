@@ -1,6 +1,7 @@
 # Salon Queue Management System
 
-**Live demo:** https://aurelia-salon-virid.vercel.app
+**Live demo:** https://aurelia-salon-virid.vercel.app 
+
 **Hosted on:** React Vite (Frontend) + Express & MongoDB (Backend)
 
 ### Staff Credentials
@@ -18,7 +19,7 @@
 
 ## 📖 Lab Documentation (Vibe Coding Lab Guide)
 
-All required design documents specified in the **MSc IT Vibe Coding Lab TA Handout** are located in the `docs/` folder and root:
+All required design documents specified in the **MSc IT Vibe Coding Lab TA Handout** are located in the `docs/` folder:
 
 1. [docs/01-brief.md](docs/01-brief.md): Problem, Users, Must-Have Features (1–6), Don't-Build List, Look & Feel.
 2. [docs/02-screens.md](docs/02-screens.md): Specifications for all 7 screens (Home, Join Queue, My Status, Reception, Barber View, Waiting Area TV, Owner Settings).
