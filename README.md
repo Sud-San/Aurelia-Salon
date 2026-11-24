@@ -26,6 +26,7 @@ All required design documents specified in the **MSc IT Vibe Coding Lab TA Hando
 3. [docs/03-flows-rules.md](docs/03-flows-rules.md): Customer Flows (Remote & Walk-in), Plain-English Queue Rules, and 10-Item Test Checklist.
 4. [AGENTS.md](AGENTS.md): Project overview, stack, commands, coding standards, and business invariants.
 5. [prompts.md](prompts.md): Log of vibe coding prompts used to build the system.
+6. [fixes.md](fixes.md): Half-page reflection on what the agent got wrong, how it was noticed, and the fix applied.
 
 ---
 
